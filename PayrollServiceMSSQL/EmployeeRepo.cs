@@ -180,5 +180,35 @@ namespace PayrollServiceMSSQL
             }
         }
 
+        /// <summary>
+        /// UC5 Get Employee Data
+        /// </summary>
+        /// <param name="query"></param>
+        public void GetEmployeesWithDataAdapter(string query)
+        {
+            try
+            {
+                DataSet dataSet = new DataSet();
+                using (connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    SqlDataAdapter adapter = new SqlDataAdapter(query, connection);
+                    adapter.Fill(dataSet);
+                    foreach (DataRow dataRow in dataSet.Tables[0].Rows)
+                    {
+                        Console.WriteLine(dataRow["Id"] + ", " + dataRow["Name"] + ", " + dataRow["StartDate"] + ", " + dataRow["Gender"] + ", " + dataRow["Phone"] + ", " + dataRow["Address"] + ", " + dataRow["Department"] + ", " + dataRow["Basic_Pay"] + ", " + dataRow["Deductions"] + ", " + dataRow["Taxable_Pay"] + ", " + dataRow["Income_Tax"] + ", " + dataRow["Net_Pay"]);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
     }
 }
