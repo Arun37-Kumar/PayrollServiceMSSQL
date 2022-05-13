@@ -15,7 +15,7 @@ namespace PayrollServiceMSSQL
             EmployeeRepo repo = new EmployeeRepo();
             try
             {
-                Console.WriteLine("Choose option or press 0 for exit\n1:Retrieve Data\n2:Add Data\n3:Update Salary");
+                Console.WriteLine("Choose option or press 0 for exit\n1:Retrieve Data\n2:Add Data\n3:Update Salary\n4:Delete Employee");
                 int option = Convert.ToInt32(Console.ReadLine());
                 switch (option)
                 {
@@ -51,6 +51,14 @@ namespace PayrollServiceMSSQL
                         Console.WriteLine("Enter new BasicPay");
                         model1.Basic_Pay = Convert.ToDouble(Console.ReadLine());
                         repo.UpdateEmployee(model1);
+                        break;
+                    case 4:
+                        EmployeeModel model2 = new EmployeeModel();
+                        Console.WriteLine("Enter id of employee whose data you want to delete");
+                        model2.Id = Convert.ToInt32(Console.ReadLine());
+                        Console.WriteLine("Enter name");
+                        model2.Name = Console.ReadLine();
+                        repo.DeleteEmployee(model2);
                         break;
                 }
                 Console.ReadLine();

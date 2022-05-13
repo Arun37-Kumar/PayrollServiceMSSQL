@@ -144,6 +144,41 @@ namespace PayrollServiceMSSQL
             }
         }
 
+        /// <summary>
+        /// UC4 Delete Employee
+        /// </summary>
+        /// <param name="obj"></param>
+        public void DeleteEmployee(EmployeeModel obj)
+        {
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                SqlCommand command = new SqlCommand("spDeleteEmployee", connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+                command.Parameters.AddWithValue("@Id", obj.Id);
+                command.Parameters.AddWithValue("@Name", obj.Name);
+                connection.Open();
+                var result = command.ExecuteNonQuery();
+                if (result != 0)
+                {
+                    Console.WriteLine("Employee details deleted successfully");
+                }
+                else
+                {
+                    Console.WriteLine("Failed to deleted employee details");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
 
     }
 }
