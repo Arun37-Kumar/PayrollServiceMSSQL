@@ -4,13 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
+using System.Data;
 
 namespace PayrollServiceMSSQL
 {
     class EmployeeRepo
     {
 
-
+        /// <summary>
+        /// UC1 Connection to server
+        /// </summary>
         public static string connectionString = @"Data Source=DESKTOP-IMDHCGD\SQLEXPRESS;Initial Catalog=Payroll_Service;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
         SqlConnection connection = null;
@@ -59,5 +62,88 @@ namespace PayrollServiceMSSQL
                 connection.Close(); //Require if we don't use using above 
             }
         }
+
+        /// <summary>
+        /// UC2 Adding employees
+        /// </summary>
+        /// <param name="obj"></param>
+        public void AddEmployee(EmployeeModel obj)
+        {
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                SqlCommand command = new SqlCommand("spAddEmployees", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.AddWithValue("@Name", obj.Name);
+                command.Parameters.AddWithValue("@Gender", obj.Gender);
+                command.Parameters.AddWithValue("@Startdate", obj.Startdate);
+                command.Parameters.AddWithValue("@Phone", obj.Phone);
+                command.Parameters.AddWithValue("@Department", obj.Department);
+                command.Parameters.AddWithValue("@Address", obj.Address);
+                command.Parameters.AddWithValue("@Basic_Pay", obj.Basic_Pay);
+                command.Parameters.AddWithValue("@Deductions", obj.Deductions);
+                command.Parameters.AddWithValue("@Taxable_Pay", obj.Taxable_Pay);
+                command.Parameters.AddWithValue("@Income_Tax", obj.Income_Tax);
+                command.Parameters.AddWithValue("@Net_Pay", obj.Net_Pay);
+                connection.Open();
+                var result = command.ExecuteNonQuery();
+                if (result != 0)
+                {
+                    Console.WriteLine("Employee details added successfully");
+                }
+                else
+                {
+                    Console.WriteLine("Failed to add employee details");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        /// <summary>
+        /// UC3 Updating the Employee
+        /// </summary>
+        /// <param name="obj"></param>
+        public void UpdateEmployee(EmployeeModel obj)
+        {
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                SqlCommand command = new SqlCommand("spUpdateEmployee", connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+                command.Parameters.AddWithValue("@Id", obj.Id);
+                command.Parameters.AddWithValue("@Name", obj.Name);
+                command.Parameters.AddWithValue("@Basic_Pay", obj.Basic_Pay);
+                connection.Open();
+                var result = command.ExecuteNonQuery();
+                if (result != 0)
+                {
+                    Console.WriteLine("Employee details updated successfully");
+                }
+                else
+                {
+                    Console.WriteLine("Failed to update employee details");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+
     }
 }
