@@ -37,7 +37,6 @@ select min(Salary) as minsalary,Gender from employee_payroll group by Gender;
 select count(Name) as EmployeeCount,Gender from employee_payroll group by Gender;  
 
 --UC8-- add employee phone, department(not null), Address (using default values)
-select * from employee_payroll;
 alter table employee_payroll add Phone bigint;
 update employee_payroll set Phone = 1234567890; 
 update employee_payroll set Phone = 1234569874 where ID IN (2,4); 
