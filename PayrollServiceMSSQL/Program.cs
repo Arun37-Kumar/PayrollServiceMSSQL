@@ -15,7 +15,7 @@ namespace PayrollServiceMSSQL
             EmployeeRepo repo = new EmployeeRepo();
             try
             {
-                Console.WriteLine("Choose option or press 0 for exit\n1:Retrieve Data\n2:Add Data\n3:Update Salary\n4:Delete Employee\n5:Get Data\n6:Find Average and MAX&MIN count");
+                Console.WriteLine("Choose option or press 0 for exit\n1:Retrieve Data\n2:Add Data\n3:Update Salary\n4:Delete Employee\n5:Get Data\n6:Find Average and MAX&MIN count\n7:Insert into two tables:");
                 int option = Convert.ToInt32(Console.ReadLine());
                 switch (option)
                 {
@@ -80,6 +80,10 @@ namespace PayrollServiceMSSQL
                         repo.GetMinOfSalary(minquery);
                         Console.WriteLine("Count");
                         repo.GetCount(countquery);
+                        break;
+                    case 7:
+                        EmployeeModel model3 = new EmployeeModel() { Name = "Anmol", Gender = 'M', Address = "Gurgaon" };
+                        repo.InsertIntoTwoTables(model3);
                         break;
                 }
                 Console.ReadLine();
