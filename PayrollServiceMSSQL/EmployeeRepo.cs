@@ -391,5 +391,49 @@ namespace PayrollServiceMSSQL
             }
         }
 
+        /// <summary>
+        /// UC8 using transactional query
+        /// </summary>
+        public void InsertIntoTwoTablesWithTransactions()
+        {
+            using (connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                SqlTransaction sqlTran = connection.BeginTransaction();             //Start a local transaction
+                SqlCommand command = connection.CreateCommand();                    //Enlist a command in the current transaction
+                command.Transaction = sqlTran;
+
+                try
+                {
+                    //Execute two seperate commands
+                    command.CommandText = $"insert into employee_payroll(Name, Basic_pay, Address) values('Harsh', '46000', 'Hyd')";
+                    command.ExecuteScalar();
+                    command.CommandText = "insert into Payroll_Details(EmpID, Salary) values(17, 36000)";
+                    int res = command.ExecuteNonQuery();
+                    if (res != 0)
+                    {
+                        //commit transaction
+                        sqlTran.Commit();
+                        Console.WriteLine("Both queries successfull");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //Handle the exception if transaction fails to commit
+                    Console.WriteLine(ex.Message);
+                    try
+                    {
+                        //Attempt to rollback transaction
+                        sqlTran.Rollback();
+                    }
+                    catch (Exception exRollBack)
+                    {
+                        //Throws an invalidOperationexception if the connection is closed or the transaction has already been rolled back on the server
+                        Console.WriteLine(exRollBack.Message);
+                    }
+                }
+            }
+        }
+
     }
 }
